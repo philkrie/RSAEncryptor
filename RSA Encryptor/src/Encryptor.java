@@ -26,23 +26,25 @@ public class Encryptor {
 		return encrypted_message.modPow(d, n);
 	}
 	
-	
-	
-	public static int gcd(int p, int q) {
-		if (q == 0) return p;
-		else return gcd(q, p % q);
+	public static BigInteger gcd(BigInteger p, BigInteger q) {
+		if (q == BigInteger.valueOf(0)) return p;
+		else return gcd(q, p.mod(q));
 	}
 	
-	public static int randInt(int min, int max) {
-
-	    // NOTE: Usually this should be a field rather than a method
-	    // variable so that it is not re-seeded every call.
-	    Random rand = new Random();
-
-	    // nextInt is normally exclusive of the top value,
-	    // so add 1 to make it inclusive
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-
-	    return randomNum;
+	public static BigInteger generateRandomBigInteger() {
+		Random rnd = new Random();
+		BigInteger r = new BigInteger(512, rnd);
+		return r;
+	}
+	
+	public static BigInteger generateRandomBigInteger(BigInteger max){
+		Random rnd = new Random();
+		BigInteger r;
+		do {
+		    r = new BigInteger(max.bitLength(), rnd);
+		} while (r.compareTo(max) >= 0);
+		
+		return r;
+		
 	}
 }
