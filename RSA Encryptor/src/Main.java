@@ -40,11 +40,11 @@ public class Main {
 		System.out.println("Our e is " + test_e);
 		System.out.println("Our d is " +test_d);
 
-		BigInteger message = BigInteger.valueOf(27);
+		String message = "Hello, this is a message";
 		System.out.println("The original message: " + message);
-		BigInteger encrypted_message = encryptor.encrypt(message);
+		BigInteger[] encrypted_message = encryptor.encrypt(message);
 		System.out.println("The encrypted message: " + encrypted_message);
-		BigInteger decrypted_message = encryptor.decrypt(encrypted_message);
+		String decrypted_message = encryptor.decrypt(encrypted_message);
 		System.out.println("The decrypted message: " + decrypted_message);
 	  }
 

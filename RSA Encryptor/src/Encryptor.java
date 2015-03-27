@@ -9,6 +9,7 @@ public class Encryptor {
 	BigInteger n;
 	BigInteger e;
 	BigInteger d;
+	BigInteger[] encrypted;
 	
 	Encryptor(BigInteger p, BigInteger q, BigInteger e, BigInteger d){
 		this.p = p;
@@ -18,12 +19,21 @@ public class Encryptor {
 		this.d = d;
 	}
 	
-	BigInteger encrypt(BigInteger message){
-		return message.modPow(e, n);
+	BigInteger[] encrypt(String message){
+		encrypted = new BigInteger[message.length()];
+		for (int i = 0; i < message.length(); i++){
+			encrypted[i] = BigInteger.valueOf((int) message.charAt(i)).modPow(e, n);
+		}
+		return encrypted;
 	}
 	
-	BigInteger decrypt(BigInteger encrypted_message){
-		return encrypted_message.modPow(d, n);
+	String decrypt(BigInteger[] encrypted_message){
+		char [] decryption = new char[encrypted_message.length];
+		for (int i = 0; i < encrypted_message.length; i++){
+			decryption[i] = (char) encrypted_message[i].modPow(d, n).intValue();
+		}
+		
+		return new String(decryption);
 	}
 	
 	public static BigInteger gcd(BigInteger p, BigInteger q) {
