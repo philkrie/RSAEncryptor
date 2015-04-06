@@ -25,10 +25,10 @@ public class Euler {
     		b = 0;
     		d = y;
     	}
-    	
-    	
     }
 
+    
+    
     public static void main(String[] args) {
     	int p = Integer.parseInt(args[0]);
 	    int q = Integer.parseInt(args[1]);

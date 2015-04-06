@@ -93,6 +93,38 @@ public class Encryptor {
 		} while (r.compareTo(max) >= 0);
 		
 		return r;
-		
 	}
+	
+	public static BigInteger[] ext_euc(BigInteger a, BigInteger b){
+		BigInteger[] result = new BigInteger[3];
+		if (b.compareTo(BigInteger.valueOf(0)) == 0){
+			result[0] = a;
+			result[1] = BigInteger.ONE;
+			result[2] = BigInteger.ZERO;
+			return result;
+		}
+		result = ext_euc(b, a.mod(b));
+		BigInteger a_prime = result[1];
+		BigInteger b_prime = result[2];
+		result[1] = b_prime;
+		result[2] = a_prime.subtract(b_prime.multiply(a.divide(b)));
+		return result;
+	}	
+	
+	public static BigInteger [ ] extendedEuclid (BigInteger a, BigInteger b) {
+		BigInteger [ ] rtn = new BigInteger[3];
+		if (b.equals (BigInteger.ZERO)) {
+			rtn[0] = a;
+			rtn[1] = BigInteger.ONE;
+			rtn[2] = BigInteger.ZERO;
+			return rtn;
+		}
+		rtn = extendedEuclid (b, a.mod (b));
+		BigInteger x = rtn[1];
+		BigInteger y = rtn[2];
+		rtn[1] = y;
+		rtn[2] = x.subtract (y.multiply (a.divide (b)));
+		return rtn;
+	}
+	
 }

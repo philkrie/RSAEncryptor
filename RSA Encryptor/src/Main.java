@@ -34,7 +34,11 @@ public class Main {
 			}
 		}
 		
-		BigInteger test_d = test_e.modInverse(phi);
+		BigInteger test_d = Encryptor.ext_euc(test_e, phi)[1];
+		if (test_d.compareTo(BigInteger.ZERO) != 1){
+			test_d = test_d.add(phi);
+		}
+		
 		Encryptor encryptor = new Encryptor(p, q, test_e, test_d);
 		  
 		System.out.println("Our e is " + test_e);
