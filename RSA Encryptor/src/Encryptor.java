@@ -10,6 +10,8 @@ public class Encryptor {
 	BigInteger e;
 	BigInteger d;
 	BigInteger[] encrypted;
+	String[] chunks;
+	String[] outputArray;
 	
 	Encryptor(BigInteger p, BigInteger q, BigInteger e, BigInteger d){
 		this.p = p;
@@ -20,20 +22,56 @@ public class Encryptor {
 	}
 	
 	BigInteger[] encrypt(String message){
-		encrypted = new BigInteger[message.length()];
-		for (int i = 0; i < message.length(); i++){
-			encrypted[i] = BigInteger.valueOf((int) message.charAt(i)).modPow(e, n);
+		chunks = message.split("(?<=\\G.{50})");
+		int length = chunks.length;
+		encrypted = new BigInteger[length];
+		
+		for (int i = 0; i < length; i++){
+			String stringNumber = "";
+			for(int j = 0; j < chunks[i].length(); j++){
+				 int numLength = String.valueOf((int) chunks[i].charAt(j)).length();
+				 switch(numLength) {
+				 	case 1: stringNumber += "00" + (int) chunks[i].charAt(j);
+				 			break;
+				 	case 2: stringNumber += "0" + (int) chunks[i].charAt(j);
+				 			break;
+				 	case 3: stringNumber += (int) chunks[i].charAt(j);
+				 			break; 
+				 }	
+			}
+			System.out.println(stringNumber);
+			encrypted[i] = new BigInteger(stringNumber);
+			encrypted[i] = encrypted[i].modPow(e, n);
 		}
 		return encrypted;
 	}
 	
 	String decrypt(BigInteger[] encrypted_message){
-		char [] decryption = new char[encrypted_message.length];
-		for (int i = 0; i < encrypted_message.length; i++){
-			decryption[i] = (char) encrypted_message[i].modPow(d, n).intValue();
-		}
+		String output_value = "";
+		String output = "";
 		
-		return new String(decryption);
+		BigInteger [] decryption = new BigInteger[encrypted_message.length];
+		for (int i = 0; i < encrypted_message.length; i++){
+			decryption[i] = encrypted_message[i].modPow(d, n);
+		}
+		for (int i = 0; i < decryption.length; i++){
+			String piece = decryption[i].toString();
+			switch(piece.length()%3){
+				case 0: break;
+			
+				case 1: piece = "00" + piece;
+						break;
+						
+				case 2: piece = "0" + piece;
+						break;
+			}
+			output_value += piece;
+		} 
+		outputArray = output_value.split("(?<=\\G.{3})");
+		for (int i = 0; i < outputArray.length; i++){
+			output += (char) Integer.parseInt(outputArray[i]);
+		}
+		return output;
 	}
 	
 	public static BigInteger gcd(BigInteger p, BigInteger q) {

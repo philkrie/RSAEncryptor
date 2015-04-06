@@ -40,7 +40,7 @@ public class Main {
 		System.out.println("Our e is " + test_e);
 		System.out.println("Our d is " +test_d);
 
-		String message = "Hello, this is a message";
+		String message = "Hello, this is an RSA encrypted message";
 		System.out.println("The original message: " + message);
 		BigInteger[] encrypted_message = encryptor.encrypt(message);
 		System.out.println("The encrypted message: " + encrypted_message);
