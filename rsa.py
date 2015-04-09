@@ -1,22 +1,22 @@
 import random
 #there are more secure random number generating modules one should use in practice.
 
-def exp(b,p,n):
-	#bin=p in binary
-	#for d in digits(bin) (right to left)
-		#if d==1 then
-			# r=r*s % n
-		#s=s^2 %n
-	# return r
-    return (b**p)%n
+def modpow(b,p,n):
+	digits = bin(p)[::-1]
+	r=1
+	for d in digits:
+		if d=='b': return r
+		if d=='1':
+			r=r*b % n
+		b=b**2 % n
 
 
 def randomprime(n):
 	#returns a random prime less than n
-	if n<10: return "ERROR"
+	if n<20: return "ERROR"
 	while 1>0:
 		guess=random.randint(3,n)
-		if {exp(k,guess-1,guess) for k in [2,3,5,7]}=={1L}:
+		if {modpow(k,guess-1,guess) for k in [2,3,5,7,11,13,17,19]}=={1L}:
 			return guess
 			break
 
@@ -54,6 +54,11 @@ def genkey(n):
     d=inverse(e,phi)
     print "Public:\t n =",n,"\n\t e =",e,"\n"
     print "Private: d =",d
+    # print " because p =",p,"\n and \t q =",q,".\n"
+    # print "testing..."
+    # test=modpow(modpow(2,e,n),d,n)
+    # print "(2^e)^d = ",test
+    return n,e,d
 
 def concat(a):
 	#just slams a bunch of strings in an array together
@@ -63,7 +68,8 @@ def concat(a):
 	return s
 
 def chunk(s):
-	#given a string, returns an array of 48-digit numbers
+	# given a string, returns an array of 48-digit numbers
+	# (means genkey's n should have at least 48 digits.)
 	chars=[s[i] for i in range(len(s))]
 	numb=[str(ord(c)) for c in chars]
 	pad=['0'*(3-len(dig))+dig for dig in numb]
@@ -82,21 +88,29 @@ def unchunk(a):
 			s=s+chr(int(nibble[3*i:3*(i+1)]))
 	return s
 
-s="This is some text that I'm chunking then unchunking."
-print s,"\n"
-a=chunk(s)
-print a,"\n"
-t=unchunk(a)	
-print t,"\n"
 
-# print randomprime(10)
-print randomprime(100)
-print randomprime(1000)
-print randomprime(10000)
-print randomprime(100000)
-print randomprime(1000000)
-# print randomprime(10000000)
-# print randomprime(100000000)
+def encrypt(string,e,n):
+	vanilla=chunk(string)
+	swirl=[modpow(v,e,n) for v in vanilla]
+	return swirl
+	
+def decrypt(a,d,n):
+	vanilla=[modpow(x,d,n) for x in a]
+	return unchunk(vanilla)
 
-print	
-genkey(10)
+# --------------------------------------
+
+print "Probable-primes:"
+for i in range(2,30):
+	print randomprime(10**i)
+
+s=" Mind at its perfect play is like some bat \n That beats about in caverns all alone,\n Contriving by a kind of senseless wit \n Not to conclude against a wall of stone. \n\n It has no need to falter or explore; \n Darkly it knows what obstacles are there, \n And so may weave and flitter, dip and soar \n In perfect courses through the blackest air.\n \n And has this simile a like perfection? \n The mind is like a bat. Precisely. Save\n That in the very happiest intellection \n A graceful error may correct the cave.\n"
+
+print
+print "key:"
+n,e,d = genkey(100)
+print
+print "plaintext: \n",s,"\n"
+a=encrypt(s,e,n)
+print "encrypted: \n",a,"\n"
+print "decrypted: \n",decrypt(a,d,n)
