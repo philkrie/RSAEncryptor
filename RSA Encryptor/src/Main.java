@@ -6,9 +6,9 @@ public class Main {
 		while(true){
 			BigInteger prime = Encryptor.generateRandomBigInteger();
 			
-			if(BigInteger.valueOf(2).modPow(prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0 &&
-				BigInteger.valueOf(3).modPow(prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0 &&
-				BigInteger.valueOf(4).modPow(prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0) {
+			if(Encryptor.customModPow(BigInteger.valueOf(2), prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0 &&
+				Encryptor.customModPow(BigInteger.valueOf(3), prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0 &&
+				Encryptor.customModPow(BigInteger.valueOf(4), prime.subtract(BigInteger.valueOf(1)), prime).compareTo(BigInteger.valueOf(1)) == 0) {
 				return prime;
 			}
 		}	

@@ -21,6 +21,20 @@ public class Encryptor {
 		this.d = d;
 	}
 	
+	public static BigInteger customModPow(BigInteger b, BigInteger p, BigInteger n){
+		String binary = p.toString(2);
+		BigInteger r = BigInteger.ONE;
+		BigInteger s = b;
+		for(int i = (binary.length() - 1); i >= 0; i--){
+			if(binary.charAt(i) == '1'){
+				r = r.multiply(s).mod(n);
+			}
+			s = s.pow(2).mod(n);
+		}
+		return r;
+		
+	}
+	
 	BigInteger[] encrypt(String message){
 		chunks = message.split("(?<=\\G.{50})");
 		int length = chunks.length;
@@ -41,7 +55,7 @@ public class Encryptor {
 			}
 			System.out.println(stringNumber);
 			encrypted[i] = new BigInteger(stringNumber);
-			encrypted[i] = encrypted[i].modPow(e, n);
+			encrypted[i] = customModPow(encrypted[i], e, n);
 		}
 		return encrypted;
 	}
@@ -52,7 +66,7 @@ public class Encryptor {
 		
 		BigInteger [] decryption = new BigInteger[encrypted_message.length];
 		for (int i = 0; i < encrypted_message.length; i++){
-			decryption[i] = encrypted_message[i].modPow(d, n);
+			decryption[i] = customModPow(encrypted_message[i], d, n);
 		}
 		for (int i = 0; i < decryption.length; i++){
 			String piece = decryption[i].toString();
@@ -81,7 +95,7 @@ public class Encryptor {
 	
 	public static BigInteger generateRandomBigInteger() {
 		Random rnd = new Random();
-		BigInteger r = new BigInteger(512, rnd);
+		BigInteger r = new BigInteger(1024, rnd);
 		return r;
 	}
 	
@@ -110,21 +124,4 @@ public class Encryptor {
 		result[2] = a_prime.subtract(b_prime.multiply(a.divide(b)));
 		return result;
 	}	
-	
-	public static BigInteger [ ] extendedEuclid (BigInteger a, BigInteger b) {
-		BigInteger [ ] rtn = new BigInteger[3];
-		if (b.equals (BigInteger.ZERO)) {
-			rtn[0] = a;
-			rtn[1] = BigInteger.ONE;
-			rtn[2] = BigInteger.ZERO;
-			return rtn;
-		}
-		rtn = extendedEuclid (b, a.mod (b));
-		BigInteger x = rtn[1];
-		BigInteger y = rtn[2];
-		rtn[1] = y;
-		rtn[2] = x.subtract (y.multiply (a.divide (b)));
-		return rtn;
-	}
-	
 }
